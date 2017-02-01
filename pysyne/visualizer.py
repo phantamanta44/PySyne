@@ -63,12 +63,19 @@ class LinearCurveVisualizer(Visualizer):
     """Path visualizer in a line."""
 
     def __init__(self, config):
-        super().__init__(config, 6)
+        super().__init__(config, 2.4)
         self.path = Path()
 
     def process(self, fft):
+        fft = (fft * 200) * self.bar_window
+        img = Image.new("RGB", self.size)
+        seg_width = self.size[0] / self.config.segs
+        half_height = self.size[1] / 2.0
         self.path.clear()
-        raise NotImplementedError()  # TODO Implement!
+        for i in range(0, self.config.segs):
+            self.path.point(i * seg_width, half_height - fft[i])
+        self.path.curve(img)
+        return img
 
 
 class LinearBarVisualizer(Visualizer):
