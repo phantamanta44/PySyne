@@ -9,6 +9,7 @@ parser = argparse.ArgumentParser(prog="pysyne", description="Creates a visualiza
 parser.add_argument("-o", "--output", type=str, default=None, dest="output")
 parser.add_argument("-s", "--size", type=str, default="1280x720", dest="size")
 parser.add_argument("-f", "--framerate", type=int, default=30, dest="fps")
+parser.add_argument("-a", "--audio", action="store_true", default=False, dest="audio")
 parser.add_argument("-n", "--segments", type=int, default=80, dest="segs")
 parser.add_argument("-m", "--min", type=float, default=2, dest="min")
 parser.add_argument("-c", "--colour", type=int, default=0xFFFFFF, dest="col")

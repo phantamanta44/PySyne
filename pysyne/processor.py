@@ -16,6 +16,7 @@ class Processor:
         self.output = config.output or (self.input[:(self.input.rfind(".")) or len(self.input)] + ".mp4")
         self.size = map(int, config.size.split("x"))
         self.fps = config.fps
+        self.audio = config.audio
         self.segs = config.segs
         self.win = window_type(config.win)
         self.proc = None
@@ -42,7 +43,7 @@ class Processor:
     def accept(self, roi):
         window = self.win(len(roi))
         fft_bins = np.real(fft(detrend(np.array(roi) * window)))
-        rebinned = rebin(fft_bins[:384], self.segs)
+        rebinned = rebin(fft_bins[1:1 + int(floor(len(fft_bins) / 3.0))], self.segs)
         for i in range(0, self.segs):
             scaled_down = self.fft_rebinned[i] * self.scale_down_factor
             if rebinned[i] >= scaled_down:
@@ -55,6 +56,15 @@ class Processor:
     def finish(self):
         self.stream_out.close()
         self.proc.wait()
+        if self.audio:
+            Popen([
+                "ffmpeg", "-y",
+                "-i", self.output,
+                "-i", self.input,
+                "-c:v", "copy",
+                "-c:a", "aac",
+                self.output
+            ]).wait()
 
 
 def detrend(data):

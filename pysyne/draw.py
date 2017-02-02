@@ -32,10 +32,10 @@ class Path:
 
 
 def _curveto(draw, src, ctrl, dest):
-    dt = 1.0 / _dist(src, dest)
+    dt = 1.0 / (_dist(src, ctrl) + _dist(ctrl, dest))
     src, ctrl, dest = map(np.array, [src, ctrl, dest])
     for t in np.arange(0.0, 1.0, dt):
-        p_edge = (src * t + (1 - t) * ctrl, ctrl * t + (1 - 5) * dest)
+        p_edge = (src * t + (1 - t) * ctrl, ctrl * t + (1 - t) * dest)
         p_curve = p_edge[0] * t + (1 - t) * p_edge[1]
         draw.point((p_curve[0], p_curve[1]))
 
